@@ -1,0 +1,9 @@
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"sheetsControl/sheetsControl.go:195","msg":"Обновлены данные о листах в таблице","fiat":"RUB","sheets_count":7}
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"sheetsControl/sheetsControl.go:200","msg":"Кэш успешно обновлен"}
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"cmd/main.go:13","msg":"Запуск приложения GoogleSheetW API"}
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"app/app.go:99","msg":"Сервер запускается","address":":8888"}
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"app/app.go:106","msg":"API endpoints:"}
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"app/app.go:107","msg":"POST /api/sheets/set-data - установка данных в таблицу"}
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"app/app.go:108","msg":"DELETE /api/sheets/{fiat} - удаление всей таблицы"}
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"app/app.go:109","msg":"DELETE /api/sheets/{fiat}/sheet/{sheetName} - удаление листа из таблицы"}
+{"level":"info","time":"2025-08-08 17:30:53.609 UTC","caller":"app/app.go:110","msg":"GET /health - проверка состояния сервиса"}

@@ -1,0 +1,78 @@
+### GET request to example server
+# curl -X POST http://localhost:8888/api/sheets/set-data
+#  -H "Content-Type: application/json"
+#  -d '{
+#    "sheet_data": {
+#      "fiat": "USD",
+#      "soup_list": [{
+#        "name": "TestSheet",
+#        "fixed_price": 100.5,
+#        "best_price": 99.8,
+#        "best_price_link": "https://example.com",
+#        "date": "2025-01-30",
+#        "money_supply": 10000.0,
+#        "average_size": 50,
+#        "info_filters": [],
+#        "data": [["Test", "Data"]]
+#      }],
+#      "raw_data": {
+#        "date": "2025-01-30",
+#        "raw_data": [["Raw", "Data"]]
+#      }
+#    }
+#  }'
+POST http://localhost:8888/api/sheets/set-data
+Content-Type: application/json
+
+{
+  "sheet_data": {
+    "fiat": "USD",
+    "soup_list": [
+      {
+        "name": "TestSheet",
+        "fixed_price": 100.5,
+        "best_price": 99.8,
+        "best_price_link": "https://example.com",
+        "date": "2025-01-30",
+        "money_supply": 10000.0,
+        "average_size": 50,
+        "info_filters": [],
+        "data": [
+          [
+            "Test",
+            "Data"
+          ]
+        ]
+      }
+    ],
+    "raw_data": {
+      "date": "2025-01-30",
+      "raw_data": [
+        [
+          "Raw",
+          "Data"
+        ]
+      ]
+    }
+  }
+}
+
+###
+
+
+###
+
+# curl -X DELETE http://localhost:8888/api/sheets/delete-spreadsheet
+#  -H "Content-Type: application/json"
+#  -d '{
+#    "fiat": "USD"
+#  }'
+#DELETE http://localhost:8888/api/sheets/delete-spreadsheet
+#Content-Type: application/json
+#
+#{
+#  "fiat": "RUB"
+#}
+#
+####
+
