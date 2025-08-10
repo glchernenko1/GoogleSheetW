@@ -1,16 +1,18 @@
 package googleAPI
 
 import (
+	"GoogleSheetW/internal/logger"
 	"context"
 	"fmt"
-	"google.golang.org/api/option"
-
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/drive/v3"
+	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
 	"io"
 	"os"
 )
+
+var log = logger.Get()
 
 func SheetExists(srv *sheets.Service, spreadsheetID, sheetName string) (bool, error) {
 
@@ -58,7 +60,7 @@ func CreateSheetList(srv *sheets.Service, spreadsheetID, sheetName string) error
 	if err != nil {
 		return fmt.Errorf("Не удалось создать лист: %v", err)
 	}
-	fmt.Printf("Лист %s успешно создан!\n", sheetName)
+	log.Infow("Лист успешно создан", "sheet_name", sheetName, "spreadsheet_id", spreadsheetID)
 	return nil
 }
 
@@ -105,21 +107,26 @@ func CreateSheet(srv *sheets.Service, sheetName string) (string, error) {
 		return "", fmt.Errorf("Не удалось создать таблицу: %v", err)
 	}
 
+	log.Infow("Таблица успешно создана", "sheet_name", sheetName, "spreadsheet_id", spreadsheet.SpreadsheetId)
 	return spreadsheet.SpreadsheetId, nil
 }
 
 func AddPermission(srv *drive.Service, fileID string, emails *[]string) error {
-
 	for _, mail := range *emails {
 		permission := &drive.Permission{
 			Role:         "writer",
 			Type:         "user",
 			EmailAddress: mail,
 		}
-		_, err := srv.Permissions.Create(fileID, permission).Do()
+		_, err := srv.Permissions.Create(fileID, permission).
+			SendNotificationEmail(true).
+			EmailMessage("Вам предоставлен доступ к новой Google Sheets таблице для анализа данных.").
+			Do()
 		if err != nil {
+			log.Errorw("Не удалось добавить разрешение", "file_id", fileID, "email", mail, "error", err)
 			return fmt.Errorf("Не удалось добавить разрешение: %v", err)
 		}
+		log.Infow("Разрешение успешно добавлено", "file_id", fileID, "email", mail, "role", "writer", "notification_sent", true)
 	}
 	return nil
 }
@@ -196,8 +203,13 @@ func CreateSheetFilter(srv *sheets.Service, spreadsheetID string, sheetID int64,
 		return fmt.Errorf("не удалось создать фильтр: %v", err)
 	}
 
-	fmt.Printf("Базовый фильтр успешно создан для диапазона [%d:%d, %d:%d]\n",
-		startRowIndex, endRowIndex, startColumnIndex, endColumnIndex)
+	log.Infow("Базовый фильтр успешно создан",
+		"spreadsheet_id", spreadsheetID,
+		"sheet_id", sheetID,
+		"start_row", startRowIndex,
+		"end_row", endRowIndex,
+		"start_column", startColumnIndex,
+		"end_column", endColumnIndex)
 	return nil
 }
 
@@ -226,7 +238,7 @@ func DeleteSheetByName(srv *sheets.Service, spreadsheetID, sheetName string) err
 		return fmt.Errorf("не удалось удалить лист %s: %v", sheetName, err)
 	}
 
-	fmt.Printf("Лист %s успешно удален!\n", sheetName)
+	log.Infow("Лист успешно удален", "sheet_name", sheetName, "spreadsheet_id", spreadsheetID)
 	return nil
 }
 
@@ -237,6 +249,6 @@ func DeleteSpreadsheetByID(driveSrv *drive.Service, spreadsheetID string) error 
 		return fmt.Errorf("не удалось удалить таблицу %s: %v", spreadsheetID, err)
 	}
 
-	fmt.Printf("Таблица %s успешно удалена!\n", spreadsheetID)
+	log.Infow("Таблица успешно удалена", "spreadsheet_id", spreadsheetID)
 	return nil
 }
