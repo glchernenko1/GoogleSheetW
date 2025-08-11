@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  googlesheetw:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: googlesheetw-app
+    ports:
+      - "8888:8888"
+    environment:
+      - PORT=8888
+      - LOG_LEVEL=info
+      - GOOGLE_JSON_PATH=/app/google.json
+    volumes:
+      # Монтируем директорию для логов
+      - ./logs:/app/log
+      # Монтируем весь проект, но только google.json файл
+      - ./google.json:/app/google.json
+    restart: unless-stopped

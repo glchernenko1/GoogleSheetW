@@ -14,8 +14,9 @@ type Config struct {
 }
 
 type AppConfig struct {
-	Port     int    `yaml:"port" env:"PORT" env-default:"8888"`
-	LogLevel string `yaml:"log_level" env:"LOG_LEVEL" env-default:"debug"`
+	Port           int    `yaml:"port" env:"PORT" env-default:"8888"`
+	LogLevel       string `yaml:"log_level" env:"LOG_LEVEL" env-default:"debug"`
+	GoogleJsonPath string `yaml:"google_json_path" env:"GOOGLE_JSON_PATH" env-default:"./google.json"`
 }
 
 type MetricsConfig struct {

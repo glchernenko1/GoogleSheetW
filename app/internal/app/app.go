@@ -29,7 +29,7 @@ func New() *App {
 
 	// Инициализация сервиса для работы с Google Sheets
 	ctx := context.Background()
-	sheetsCtrl := sheetsControl.New(ctx, cache, "google.json")
+	sheetsCtrl := sheetsControl.New(ctx, cache, cfg.App.GoogleJsonPath)
 
 	// Инициализация HTTP контроллера
 	httpController := controller.NewSheetsController(sheetsCtrl)
