@@ -12,6 +12,7 @@ services:
       - PORT=8888
       - LOG_LEVEL=info
       - GOOGLE_JSON_PATH=/app/google.json
+      - EMAILS_LIST=glchernenko1@gmail.com
     volumes:
       # Монтируем директорию для логов
       - ./logs:/app/log

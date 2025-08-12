@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"GoogleSheetW/internal/config"
 	"sync"
 )
 
@@ -19,8 +20,17 @@ func (s *Settings) GetEmails() []string {
 
 func GetSettings() *Settings {
 	once.Do(func() {
+		cfg := config.GetConfig()
+		emails := cfg.GetEmails()
+
+		// Если email не найдены ни в переменной окружения, ни в файле,
+		// используем резервный email
+		if len(emails) == 0 {
+			emails = []string{"glchernenko1@gmail.com"}
+		}
+
 		setting = &Settings{
-			emails: []string{"glchernenko1@gmail.com"},
+			emails: emails,
 		}
 	})
 	return setting

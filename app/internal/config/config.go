@@ -1,10 +1,12 @@
 package config
 
 import (
+	"encoding/json"
 	"flag"
 	"github.com/ilyakaznacheev/cleanenv"
 	"log/slog"
 	"os"
+	"strings"
 	"sync"
 )
 
@@ -17,6 +19,8 @@ type AppConfig struct {
 	Port           int    `yaml:"port" env:"PORT" env-default:"8888"`
 	LogLevel       string `yaml:"log_level" env:"LOG_LEVEL" env-default:"debug"`
 	GoogleJsonPath string `yaml:"google_json_path" env:"GOOGLE_JSON_PATH" env-default:"./google.json"`
+	EmailsPath     string `yaml:"emails_path" env:"EMAILS_PATH" env-default:"./email.json"`
+	EmailsList     string `yaml:"emails_list" env:"EMAILS_LIST"`
 }
 
 type MetricsConfig struct {
@@ -67,4 +71,45 @@ func GetConfig() *Config {
 
 	})
 	return instance
+}
+
+// GetEmails возвращает список email адресов из конфигурации
+// Приоритет: сначала проверяется EMAILS_LIST (строка с разделителями запятой),
+// затем загружается из файла по пути EMAILS_PATH
+func (c *Config) GetEmails() []string {
+	var emails []string
+
+	// Проверяем прямой список из переменной окружения
+	if c.App.EmailsList != "" {
+		emailList := strings.Split(c.App.EmailsList, ",")
+		for _, email := range emailList {
+			trimmed := strings.TrimSpace(email)
+			if trimmed != "" {
+				emails = append(emails, trimmed)
+			}
+		}
+		return emails
+	}
+
+	// Загружаем из файла
+	if c.App.EmailsPath != "" {
+		file, err := os.ReadFile(c.App.EmailsPath)
+		if err != nil {
+			slog.Error("Failed to read emails file", slog.String("path", c.App.EmailsPath), slog.String("error", err.Error()))
+			return emails
+		}
+
+		var emailData struct {
+			Emails []string `json:"emails"`
+		}
+
+		if err := json.Unmarshal(file, &emailData); err != nil {
+			slog.Error("Failed to parse emails file", slog.String("path", c.App.EmailsPath), slog.String("error", err.Error()))
+			return emails
+		}
+
+		emails = emailData.Emails
+	}
+
+	return emails
 }
