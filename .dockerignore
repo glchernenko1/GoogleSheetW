@@ -39,6 +39,3 @@ Dockerfile-build
 docker-compose.yml
 .dockerignore
 
-# Build artifacts
-main
-app/main
