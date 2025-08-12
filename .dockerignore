@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+.gitmodules
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+app/log/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+*.md
+
+# Test files
+*.test
+test.http
+
+# Temporary files
+*.tmp
+*.temp
+
+# Credentials (should be mounted at runtime)
+google.json
+app/google.json
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Build artifacts
+main
+app/main

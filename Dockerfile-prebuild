@@ -1,0 +1,19 @@
+# Dockerfile для использования готового бинарного файла
+FROM alpine:latest
+
+# Устанавливаем CA сертификаты для HTTPS
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /app
+
+# Копируем уже собранное приложение
+COPY app/main .
+
+# Даем права на выполнение
+RUN chmod +x main
+
+# Создаем директорию для логов
+RUN mkdir -p /app/log
+
+# Запускаем приложение
+CMD ["./main"]
