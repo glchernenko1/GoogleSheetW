@@ -35,7 +35,7 @@ google.json
 app/google.json
 
 # Docker
-Dockerfile
+Dockerfile-build
 docker-compose.yml
 .dockerignore
 

@@ -1,28 +1,16 @@
-# Используем официальный образ Go
-FROM golang:1.23-alpine AS builder
-
-# Устанавливаем рабочую директорию
-WORKDIR /app
-
-# Копируем go.mod и go.sum
-COPY app/go.mod app/go.sum ./
-
-# Загружаем зависимости
-RUN go mod download
-
-# Копируем исходный код
-COPY app/ .
-
-# Собираем приложение
-RUN GOOS=linux go build -o main ./cmd/main.go
-
-# Используем минимальный образ для production
+# Dockerfile-build для использования готового бинарного файла
 FROM alpine:latest
 
+# Устанавливаем CA сертификаты для HTTPS
+RUN apk --no-cache add ca-certificates
+
 WORKDIR /app
 
-# Копируем собранное приложение
-COPY --from=builder /app/main .
+# Копируем уже собранное приложение
+COPY app/main .
+
+# Даем права на выполнение
+RUN chmod +x main
 
 # Создаем директорию для логов
 RUN mkdir -p /app/log
